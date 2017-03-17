@@ -1,4 +1,4 @@
-// PROGRAM p05.c
+// PROGRAM p05a.c
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
