@@ -1,6 +1,5 @@
 // PROGRAMA p03.c
 #include <stdio.h>
-#include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/time.h>
