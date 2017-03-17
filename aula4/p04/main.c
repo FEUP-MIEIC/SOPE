@@ -4,40 +4,35 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <wait.h>
+// PROGRAMA p04a.c
 
+int main(void) 
+{ 
+	pid_t pid; 
+	int i, n, status; 
+	for (i=1; i<=3; i++) { 
+		pid=fork(); 
 
-int way=1; // 1 is up, 0 is down;
-
-
-void sigusr_handler(int signo){
-	if(signo==SIGUSR1){
-		way=1;
-	}else{
-		way=0;
-	}
-}
-
-int main(void){
-
-	if (signal(SIGUSR1, sigusr_handler) < 0){
-		fprintf(stderr, "Unable to install SIGUSR1 handler\n");
-		exit(1);
-	}
-
-	if (signal(SIGUSR2, sigusr_handler) < 0){
-		fprintf(stderr, "Unable to install SIGUSR2 handler\n");
-		exit(1);
-	}
-	int v=0;
-	while(1){
-		if(way){
-			v++;
-		}else{
-			v--;
+		if (pid == 0){ 
+			printf("CHILD no. %d (PID=%d) working ... \n",i,getpid()); 
+			sleep(i*7); // child working ... 
+			printf("CHILD no. %d (PID=%d) exiting ... \n",i,getpid());  
+			exit(0); 
+		} 
+	} 
+	for (i=1 ;i<=4; i++ ) {  
+		printf("PARENT: working hard (task no. %d) ...\n",i); 
+		n=20; while((n=sleep(n))!=0); 
+		printf("PARENT: end of task no. %d\n",i); 
+		printf("PARENT: waiting for child no. %d ...\n",i); 
+		while((pid=waitpid(-1, &status, WNOHANG))){
+			if(pid>0){
+				printf("PARENT: child with PID=%d terminated with exit code %d\n",pid,WEXITSTATUS(status)); 
+			}else{
+				break;
+			}
 		}
-		printf("v: %d\n", v);
-		usleep(1000000);
-	}
-
-	exit(0);
-}
+	} 
+	exit(0); 
+} 
