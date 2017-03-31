@@ -44,7 +44,8 @@ int main(int argc, char** argv){
 	fseek(f, 0, SEEK_END);
 	long fsize=ftell(f);
 	//printf("Read %li bytes.\n", fsize);
-	char* buf=malloc(fsize);
+
+	char* buf=calloc(fsize+1, 1);
 	fseek(f, 0, SEEK_SET);
 
 	char c;
@@ -52,11 +53,14 @@ int main(int argc, char** argv){
 	while((c=getc(f))!=EOF){
 		buf[i++]=c;
 	}
-	//printf("%s\n", buf);
+
 	write(pfd[1], buf, fsize);
 	close(pfd[1]);
+	fclose(f);
 
-	read(pfd2[0], buf, fsize);
+	read(pfd2[0], buf, fsize+1);
 
-	printf("%s\n", buf);
+	printf("%s", buf);
+
+	free(buf);
 }
