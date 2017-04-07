@@ -48,6 +48,8 @@ int main(int argc, char** argv){
 	//dup2(STDOUT_FILENO, pfd1[0]);
 	return 0;
 
+
+	// O código abaixo não precisa de ser executado se for o sort a imprimir.
 	char* buf=malloc(100);
 	int rr;
 	while((rr=read(pfd1[0], buf, 100))>0){
