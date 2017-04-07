@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 int main(int argc, char** argv){
 	if(argc!=2){ /******		Error checking 		*****/
@@ -32,7 +34,7 @@ int main(int argc, char** argv){
 		close(pfd2[1]); // close write pipe;
 		close(pfd1[0]); // close read pipe;
 		dup2(pfd2[0], STDIN_FILENO);
-		dup2(pfd1[1], STDOUT_FILENO);
+		//dup2(pfd1[1], STDOUT_FILENO);
 		execlp("sort", "sort", NULL);
 		printf("Error calling exec!\n");
 		exit(-10);
@@ -41,6 +43,10 @@ int main(int argc, char** argv){
 	// Parent
 
 	close(pfd1[1]); // close write pipe
+	wait(NULL);
+	wait(NULL);
+	//dup2(STDOUT_FILENO, pfd1[0]);
+	return 0;
 
 	char* buf=malloc(100);
 	int rr;
@@ -49,4 +55,6 @@ int main(int argc, char** argv){
 	}
 
 	free(buf);
+
+	return 0;
 }
