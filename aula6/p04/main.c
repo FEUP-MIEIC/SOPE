@@ -10,8 +10,11 @@
 
 void* myThread(void *arg){
 	sleep(1);
-	printf("My TID is: %ld or %lu! My PID is: %d\n", syscall(SYS_gettid), pthread_self(), getpid());
-	pthread_exit(arg);
+	long int* tid=malloc(sizeof (long int));
+	*tid=syscall(SYS_gettid);
+	//printf("My TID is: %ld or %lu! My PID is: %d\n", tid, pthread_self(), getpid());
+
+	pthread_exit(tid);
 }
 
 int main(){
@@ -28,6 +31,7 @@ int main(){
 		int* res;
 		pthread_join(threads[t], (void*) &res);
 		printf("Thread %d returned!\n", *res);
+		free(res);
 	}
 
 	pthread_exit(0);
